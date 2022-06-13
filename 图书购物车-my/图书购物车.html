@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图书购物车</title>
+    <link rel="stylesheet" href="./index.css">
+</head>
+
+<body>
+    <div id="app">
+        <div class="booksContainer" v-if="isTrue">
+            <div class="item title">
+                图书购物车
+            </div>
+            <div class="item">
+                <ul>
+                    <li>序号</li>
+                    <li>书籍名称</li>
+                    <li>出版日期</li>
+                    <li>价格</li>
+                    <li>购买数量</li>
+                    <li>编辑</li>
+                </ul>
+            </div>
+            <div class="item" v-for="(item,index) in books">
+                <ul>
+                    <li>{{index+1}}</li>
+                    <li>{{item.bookName}}</li>
+                    <li>{{item.PublicationDate}}</li>
+                    <li>{{item.price}}</li>
+                    <li><button @click="counterReduce(item)">-</button><span>{{item.counter}}</span><button
+                            @click="counterAdd(item)">-</button></li>
+                    <li><button @click="remove(item,index)">移除</button></li>
+                </ul>
+            </div>
+            <div class="item allPrices">
+                总价：{{AllPrices}}
+            </div>
+        </div>
+        <div class="empty" v-else>
+            木有书了，去逛逛吧!!!
+        </div>
+    </div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+<script>
+    const vm = new Vue({
+        el: '#app',
+        data: {
+            books: [
+                { bookName: '算法导论', PublicationDate: '2006-09', price: 85, counter: 1 },
+                { bookName: 'UNIX编程艺术', PublicationDate: '2006-08', price: 59, counter: 1 },
+                { bookName: '编程珠玑', PublicationDate: '2008-10', price: 39, counter: 1 },
+                { bookName: '代码大全', PublicationDate: '2006-03', price: 128, counter: 1 }
+            ],
+            isTrue: true
+        },
+        computed: {
+            AllPrices() {
+                let allPrice = 0;
+                this.books.forEach(function (item, index) {
+                    allPrice += item.price * item.counter;
+                })
+                return allPrice;
+            }
+        },
+        methods: {
+            counterAdd(item) {
+                item.counter++;
+                if (item.counter > 5) {
+                    item.counter = 5;
+                    alert('最多只能购买5本')
+                }
+            },
+            counterReduce(item) {
+                item.counter--;
+                if (item.counter < 1) {
+                    item.counter = 1;
+                    alert('不能少于1本')
+                }
+            },
+            remove(item, index) {
+                this.books.splice(index, 1);
+                console.log(this.books.length);
+                if (this.books.length === 0) {
+                    this.isTrue = false;
+                }
+            }
+        },
+    });
+</script>
+
+</html>
